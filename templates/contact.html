@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-3 px-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><span class="h2 fw-bold text-warning">CRUD</span><span class="fw-bold text-light h2">System</span></a>
+            <button class="navbar-toggler" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#navbarSupportedContent" 
+                aria-controls="navbarSupportedContent" 
+                aria-expanded="false" 
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-center">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " aria-current="page" href="/about">About Me</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active text-warning" aria-current="page" href="/contact">Send Feedback</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FeedBack -->
+     <section class="p-3 my-5">
+        <div class="container shadow rounded p-3">
+            <div class="container">
+                <h1 class="text-center fw-bold">Send your <span class="h1 text-warning fw-bold">Feedback!</span></h1>
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      {% for message in messages %}
+                          {{ message }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>
+                      {% endfor %}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  {% endif %}
+                {% endwith %}
+            </div>
+            <div class="container">
+                <form action="{{url_for('feedback')}}" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" name="name">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email address</label>
+                        <input type="email" class="form-control" name="email" placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Messages</label>
+                        <textarea class="form-control" name="feedback" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <button type="submit" class="btn btn-warning" >
+                            Send Feedback
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
+                                <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/>
+                                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="container shadow rounded p-5 my-5">
+            <h1 class="text-center fw-bold text-warning">
+                MESSAGES<span class="h1 fw-bold text-dark">Inbox</span>
+            </h1>
+            {% for msg in feedbacks %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="text-center">{{msg.feedback}}</p>
+                    <p class="text-secondary">-{{msg.name}} </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+     </section>
+
+{% endblock %}

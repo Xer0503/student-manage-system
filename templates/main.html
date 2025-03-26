@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+{% block title %}My Flask Application{% endblock %}
+
+{% block content %}
+    <!-- Heading title -->
+     <div class="container p-3 shadow my-5">
+         <section class="p-2 bg-light rounded">
+            <div class="d-flex justify-content-between align-items-center px-3">
+                <h1 class="fw-bold">Manage <span class="fw-bold text-warning">Student</span></h1>
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      {% for message in messages %}
+                          {{ message }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>
+                      {% endfor %}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  {% endif %}
+                {% endwith %}
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addStudent">Add Student Info</button>
+              </div>
+            <div class="container my-3">
+                <table class="text-center table table-striped table-hover shadow">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for row in students %}
+                      <tr>
+                        <th>{{row.id}}</th>
+                        <td>{{row.name}}</td>
+                        <td>{{row.age}}</td>
+                        <td>{{row.email}}</td>
+                        <td>{{row.course}}</td>
+                        <td>    
+                          <button type="button" class="btn btn-warning btn-sm editBtn"
+                            data-bs-toggle="modal" data-bs-target="#editStudent"
+                            data-id="{{ row.id }}" 
+                            data-name="{{ row.name }}"
+                            data-age="{{ row.age }}"
+                            data-email="{{ row.email }}"
+                            data-course="{{ row.course }}">
+                            Edit
+                          </button>
+                          <a href="{{ url_for('delete', id=row.id) }}" class="btn btn-danger btn-sm" 
+                            onclick="return confirm('Are you sure you want to delete?')">
+                            Delete
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                    {% endfor %}
+                  </table>
+
+                  <!-- ADD Modal -->
+                  <div class="modal modal-fade my-auto text-left" id="addStudent" tabindex="-1">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">ADD STUDENT INFO</h5>
+                        </div>
+                        <div class="modal-body">
+                          <form action="{{url_for('insert')}}" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Age</label>
+                                <input type="number" name="age" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="name@example.com" required>
+                            </div>
+                            <div class="mb-3">
+                              <select name="course" class="form-control" required>
+                                <option selected disabled>Select your course</option>
+                                <option value="BSIT">BSIT</option>
+                                <option value="BSBA">BSBA</option>
+                                <option value="BEED">BEED</option>
+                              </select>                            
+                            </div>
+                            <div class="mb-3 text-center">
+                              <button type="submit" class="btn btn-success">ADD</button>
+                              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End of Modal Add-->
+                  <!-- Edit Modal -->
+                  <div class="modal modal-fade my-auto" id="editStudent" tabindex="-1">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">EDIT STUDENT INFO</h5>
+                        </div>
+                        <div class="modal-body">
+                          <form action="{{ url_for('update') }}" method="POST">
+                            <input type="hidden" name="id">                        
+                            <div class="mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Age</label>
+                                <input type="number" name="age" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="name@example.com" required>
+                            </div>
+                            <div class="mb-3">
+                              <div class="mb-3">
+                                <select name="course" class="form-control" required>
+                                  <option selected disabled>Select your course</option>
+                                  <option value="BSIT">BSIT</option>
+                                  <option value="BSBA">BSBA</option>
+                                  <option value="BEED">BEED</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="mb-3 text-center">
+                              <button type="submit" class="btn btn-success">UPDATE</button>
+                              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End of Modal Edit-->
+
+                </div>
+         </section>
+     </div>
+
+     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const editButtons = document.querySelectorAll(".editBtn");
+          editButtons.forEach(button => {
+              button.addEventListener("click", function () {
+                  document.querySelector("#editStudent input[name='id']").value = this.dataset.id;
+                  document.querySelector("#editStudent input[name='name']").value = this.dataset.name;
+                  document.querySelector("#editStudent input[name='age']").value = this.dataset.age;
+                  document.querySelector("#editStudent input[name='email']").value = this.dataset.email;
+                  document.querySelector("#editStudent input[name='course']").value = this.dataset.course;
+              });
+          });
+      });
+      </script>
+      
+{% endblock %}
